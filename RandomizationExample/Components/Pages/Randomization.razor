@@ -1,0 +1,45 @@
+﻿@page "/randomization"
+@attribute [RenderModeInteractiveServer]
+<PageTitle>Randomization</PageTitle>
+<h1>Randomization</h1>
+<div class="d-flex flex-row">
+    <div class="p-4"><img src="@src[0]" class="image-fluid" /></div>
+    <div class="p-4"><img src="@src[1]" class="image-fluid" /></div>
+    <div class="p-4"><img src="@src[2]" class="image-fluid" /></div>
+    <div class="p-4"><button class="btn btn-primary btn-lg" @onclick="Spin">Spin</button></div>
+</div>
+<h2>@caption</h2>
+
+@code {
+    string[] src = new string[3];
+    string caption = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.Delay(5);
+
+        src[0] = "/images/1.png";
+        src[1] = "/images/2.png";
+        src[2] = "/images/3.png";
+    }
+
+    private void Spin()
+    { 
+        int[] items = { 1, 2,3 };
+
+        int[] selectedItems = Random.Shared.GetItems(items, 3);
+
+        src[0] = "/images/" + selectedItems[0] + ".png";
+        src[1] = "/images/" + selectedItems[1] + ".png";
+        src[2] = "/images/" + selectedItems[2] + ".png";
+        bool areEqual = selectedItems[0] == selectedItems[1] && selectedItems[1] == selectedItems[2];
+        if (areEqual)
+        {
+            caption = "You Win!";
+        }
+        else
+        {
+            caption = string.Empty;
+        }
+        }
+}
