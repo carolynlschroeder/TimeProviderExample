@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 
 namespace IHostedLifecycleExample
 {
-    public class ServiceA: IHostedService, IHostedLifecycleService
+    public class ServiceA: IHostedLifecycleService
     {
         private readonly ILogger<ServiceA> logger;
 
@@ -24,24 +24,22 @@ namespace IHostedLifecycleExample
             return Task.CompletedTask;
         }
 
-        public Task StartAsync(CancellationToken cancellationToken)
+        public async Task StartAsync(CancellationToken cancellationToken)
         {
             logger.LogInformation("Start Async");
-            _ = DoWork();
-            return Task.CompletedTask;
+            await DoWork();
         }
 
         public Task StartedAsync(CancellationToken cancellationToken) => Task.CompletedTask;
 
         public Task StoppingAsync(CancellationToken cancellationToken) => Task.CompletedTask;
 
-        public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
+        public Task StopAsync(CancellationToken cancellationToken) { return Task.CompletedTask; }
 
         public Task StoppedAsync(CancellationToken cancellationToken) => Task.CompletedTask;
 
         public async Task DoWork(CancellationToken cancellationToken = default)
         {
-            cancellationToken.ThrowIfCancellationRequested();
             logger.LogInformation("Started DoWork");
             await Task.Delay(5000);
             Environment.Exit(0);
